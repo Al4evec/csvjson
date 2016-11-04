@@ -7,19 +7,28 @@ module.exports = {
     toCSV           : toCSV
 }
 
+function splitLines (content) {
+    // Allow to use multiline data between "
+    content = content.replace(/"[^"]+"/g, function(str) {
+        return str.replace(/\n/g, '(.!.)'); // If you need this set of chars in your data -> change here to another
+    });
+    content = content.split(/[\n\r]+/ig);
+    for (var i = 0; i < content.length; i++) {
+        content[i] = content[i].replace(/\(\.\!\.\)/g, '\n');
+    }
+    console.log(content);
+    return content;
+}
 
 function toColumnArray(data, opts){
 
     opts = opts || { };
-    
     var delimiter   = (opts.delimiter || ',');
     var content     = data;
-
     if(typeof(content) !== "string"){
         throw new Error("Invalid input, input data should be a string");
     }
-
-    content         = content.split(/[\n\r]+/ig);
+    content         = splitLines(content);
     var headers     = content.shift().split(delimiter);
     var hashData    = { };
 
@@ -42,13 +51,12 @@ function toColumnArray(data, opts){
 function toObject(data, opts){
 
     opts = opts || { };
-
     var delimiter   = (opts.delimiter || ',');
     var content     = data;
     if(typeof(content) !== "string"){
         throw new Error("Invalid input, input data should be a string");
     }
-    content = content.split(/[\n\r]+/ig);
+    content         = splitLines(content);
     var headers = content.shift().split(delimiter),
         hashData = [];
     content.forEach(function(item){
@@ -75,7 +83,7 @@ function toSchemaObject(data, opts){
         throw new Error("Invalid input, input should be a string");
     }
 
-    content         = content.split(/[\n\r]+/ig);
+    content         = splitLines(content);
     var headers     = content.shift().split(delimiter);
     var hashData    = [ ];
 
@@ -105,7 +113,7 @@ function toArray(data, opts){
         throw new Error("Invalid input, input data should be a string");
     }
 
-    content = content.split(/[\n\r]+/ig);
+    content         = splitLines(content);
     var arrayData = [];
     content.forEach(function(item){
         if(item){

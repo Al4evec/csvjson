@@ -23,6 +23,15 @@ describe('toObject', function() {
   });
 });
 
+describe('toObject multiline data', function() {
+  var result = csvjson.toObject(fs.readFileSync(path.join(__dirname, 'sample_multi.csv'), { encoding : 'utf8'}));
+  it('should return an array of objects', function(done) {
+    expect(result).to.be.an('array');
+    expect(result[0]).to.be.an('object');
+    done();
+  });
+});
+
 describe('toArray', function() {
   var result = csvjson.toArray(fs.readFileSync(path.join(__dirname, 'sample.csv'), { encoding : 'utf8'}));
   it('should return an array of arrays', function(done) {

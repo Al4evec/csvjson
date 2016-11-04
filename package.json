@@ -11,7 +11,7 @@
     "url": "git://github.com/pradeep-mishra/csvjson.git"
   },
   "scripts": {
-    "test": "./node_modules/.bin/mocha"
+    "test": "./node_modules/.bin/mocha -c"
   },
   "license": "MIT",
   "readmeFilename": "README.md",
