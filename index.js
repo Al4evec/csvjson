@@ -16,7 +16,6 @@ function splitLines (content) {
     for (var i = 0; i < content.length; i++) {
         content[i] = content[i].replace(/\(\.\!\.\)/g, '\n');
     }
-    console.log(content);
     return content;
 }
 
