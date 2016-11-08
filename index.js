@@ -10,9 +10,11 @@ module.exports = {
 function splitLines (content) {
     // Allow to use multiline data between "
     content = content.replace(/"[^"]+"/g, function(str) {
-        return str.replace(/\n/g, '(.!.)'); // If you need this set of chars in your data -> change here to another
+        return str.replace(/(\r\n|\n|\r)/gm, '(.!.)'); // If you need this set of chars in your data -> change here to another
     });
+
     content = content.split(/[\n\r]+/ig);
+
     for (var i = 0; i < content.length; i++) {
         content[i] = content[i].replace(/\(\.\!\.\)/g, '\n');
     }
