@@ -12,25 +12,26 @@ function splitLines (content) {
     content = content.replace(/"[^"]+"/g, function(str) {
         return str.replace(/(\r\n|\n|\r)/gm, '(.!.)'); // If you need this set of chars in your data -> change here to another
     });
-
-    content = content.split(/[\n\r]+/ig);
+    // content = content.split(/[\n\r]+/ig);
+    content = content.split(/\r\n|\n|\r+/ig);
 
     for (var i = 0; i < content.length; i++) {
         content[i] = content[i].replace(/\(\.\!\.\)/g, '\n');
     }
+
     return content;
 }
 
-function toColumnArray(data, opts){
+function toColumnArray(data, opts = {delimiter:','}){
 
-    opts = opts || { };
-    var delimiter   = (opts.delimiter || ',');
+    // opts = opts === undefined ? {} : opts;
+    // var delimiter = opts.delimiter === undefined ? ',' : opts.delimiter;
     var content     = data;
     if(typeof(content) !== "string"){
         throw new Error("Invalid input, input data should be a string");
     }
     content         = splitLines(content);
-    var headers     = content.shift().split(delimiter);
+    var headers     = content.shift().split(opts.delimiter);
     var hashData    = { };
 
     headers.forEach(function(item){
@@ -39,30 +40,28 @@ function toColumnArray(data, opts){
 
     content.forEach(function(item){
         if(item){
-            item = item.split(delimiter);
+            item = item.split(opts.delimiter);
             item.forEach(function(val, index){
                 hashData[headers[index]].push(trimQuote(val));
             });
         }
     });
-
     return hashData;
 }
 
-function toObject(data, opts){
-
-    opts = opts || { };
-    var delimiter   = (opts.delimiter || ',');
-    var content     = data;
+function toObject(data, opts = {delimiter: ','}){
+    // opts = opts === undefined ? {} : opts;
+    // var delimiter = opts.delimiter === undefined ? ',' : opts.delimiter;
+    var content = data;
     if(typeof(content) !== "string"){
         throw new Error("Invalid input, input data should be a string");
     }
     content         = splitLines(content);
-    var headers = content.shift().split(delimiter),
+    var headers = content.shift().split(opts.delimiter),
         hashData = [];
     content.forEach(function(item){
         if(item){
-            item = item.split(delimiter);
+            item = item.split(opts.delimiter);
             var hashItem = {};
             headers.forEach(function(headerItem, index){
                 hashItem[headerItem] = trimQuote(item[index]);
@@ -70,27 +69,27 @@ function toObject(data, opts){
             hashData.push(hashItem);
         }
     });
+
     return hashData;
 }
 
-function toSchemaObject(data, opts){
-
-    opts = opts || { };
-
-    var delimiter   = (opts.delimiter || ',');
-    var content     = data;
+function toSchemaObject(data, opts = {delimiter:','}){
+    
+    // opts = opts === undefined ? {} : opts;
+    // var delimiter = opts.delimiter === undefined ? ',' : opts.delimiter;
+    var content = data;
 
     if(typeof(content) !== "string"){
         throw new Error("Invalid input, input should be a string");
     }
 
     content         = splitLines(content);
-    var headers     = content.shift().split(delimiter);
+    var headers     = content.shift().split(opts.delimiter);
     var hashData    = [ ];
 
     content.forEach(function(item){
         if(item){
-            item = item.split(delimiter);
+            item = item.split(opts.delimiter);
             var schemaObject = {};
             item.forEach(function(val, index){
                 putDataInSchema(headers[index], val, schemaObject);
@@ -103,11 +102,10 @@ function toSchemaObject(data, opts){
 }
 
 
-function toArray(data, opts){
+function toArray(data, opts = {delimiter: ','}){
 
-    opts = opts || { };
-
-    var delimiter   = (opts.delimiter || ',');
+    // opts = opts === undefined ? {} : opts;
+    // var delimiter = opts.delimiter === undefined ? ',' : opts.delimiter;
     var content     = data;
 
     if(typeof(content) !== "string"){
@@ -118,7 +116,7 @@ function toArray(data, opts){
     var arrayData = [];
     content.forEach(function(item){
         if(item){
-            item = item.split(delimiter).map(function(cItem){
+            item = item.split(opts.delimiter).map(function(cItem){
                 return trimQuote(cItem);
             });
             arrayData.push(item);
@@ -127,13 +125,13 @@ function toArray(data, opts){
     return arrayData;
 }
 
-function toCSV(data, opts){
+function toCSV(data, opts = {delimiter:',', wrap: ''}){
 
-    opts                = opts || { };
+    // opts = opts === undefined ? {} : opts;
 
-    opts.delimiter      = opts.delimiter || ',';
+    // opts.delimiter = opts.delimiter === undefined ? ',' : opts.delimiter;
 
-    opts.wrap           = opts.wrap || '';
+    // opts.wrap = opts.wrap === undefined ? '' : opts.wrap;
 
     opts.arrayDenote    = opts.arrayDenote && String(opts.arrayDenote).trim() ? opts.arrayDenote : '[]';
 

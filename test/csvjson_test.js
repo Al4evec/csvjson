@@ -15,7 +15,9 @@ describe('csvjson', function() {
 });
 
 describe('toObject', function() {
-  var result = csvjson.toObject(fs.readFileSync(path.join(__dirname, 'sample.csv'), { encoding : 'utf8'}));
+  var options = { encoding : 'utf8'};
+  var data = fs.readFileSync(path.join(__dirname, 'sample.csv'), options.encoding);
+  var result = csvjson.toObject(data, options);
   it('should return an array of objects', function(done) {
     expect(result).to.be.an('array');
     expect(result[0]).to.be.an('object');

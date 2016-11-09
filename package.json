@@ -1,7 +1,7 @@
 {
   "name": "csvjson",
   "description": "convert csv to json and json to csv",
-  "version": "2.3.1",
+  "version": "2.3.2",
   "main": "./index.js",
   "author": {
     "name": "Pradeep Mishra"
@@ -11,7 +11,7 @@
     "url": "git://github.com/pradeep-mishra/csvjson.git"
   },
   "scripts": {
-    "test": "./node_modules/.bin/mocha -c"
+    "test": "./node_modules/.bin/mocha --recursive -c"
   },
   "license": "MIT",
   "readmeFilename": "README.md",
